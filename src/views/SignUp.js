@@ -31,12 +31,12 @@ const SignUp = () => {
       'password': password
     }
 
-    await axios.post('http://localhost:3000/api/v1/users', {
+    await axios.post('http://localhost:3000/api/v1/users', 
       data
-    })
+    )
     .then((res) => {
       console.log('res: ', res)
-      // navigate('/')
+      navigate('/', { state: { user: res.data.data }})
     })
     .catch((err) => {
       console.log('err', err)

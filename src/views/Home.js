@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { AppBar, Box, CssBaseline, Divider, Drawer, List, Toolbar, Typography, ListItem, ListItemIcon, ListItemText, Button } from "@mui/material";
+import { AppBar, Box, CssBaseline, Divider, Drawer, List, Toolbar, Typography, ListItem, ListItemIcon, ListItemText, Button, Avatar } from "@mui/material";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SettingsIcon from '@mui/icons-material/Settings';
 import FilterIcon from '@mui/icons-material/Filter';
@@ -12,6 +12,7 @@ import NewspaperIcon from '@mui/icons-material/Newspaper';
 import BBS from "./BBS";
 import News from "./News";
 import CastModel from "../components/CastModel";
+import axios from "axios";
 
 const drawerWidth = 240;
 
@@ -24,11 +25,13 @@ const Home = () => {
   const [ search, setSearch ] = useState(false);
   const [ genre, setGenre ] = useState('');
   const [ goods, setGoods ] = useState('');
+  const [ currentUser, setCurrentUser ] = useState()
 
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state;
 
+  console.log('state: ', state)
 
   const showHome = () => {
     setHome(true);
@@ -70,6 +73,21 @@ const Home = () => {
     setSetting(true);
   }
 
+  const LogOut = async() => {
+    await axios.get('http://localhost:3000/api/v1/users/logout')
+    .then(() => {
+      console.log('logout success')
+      setCurrentUser('')
+    })
+  }
+
+  const getCurrentUser = () => {
+    axios.get('http://localhost:3000/api/v1/users')
+    .then((res) => {
+      setCurrentUser(res.data.data)
+    })
+  }
+
   useEffect(() => {
     if (state) {
       setGenre(state.genre);
@@ -77,8 +95,10 @@ const Home = () => {
       console.log('state', state)
       setSearch(state.search)
     }
+
+    getCurrentUser()
   }
-  , [state]);
+  , []);
 
   return (
     <Box sx={{ display: 'flex'}}>
@@ -88,7 +108,11 @@ const Home = () => {
           <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
             Chai
           </Typography>
+          { currentUser ? (
+            <Button color="inherit" onClick={() => {LogOut()}}>LogOut</Button>
+          ) : (
           <Button color="inherit" onClick={() => (navigate('/signin'))}>Sign In</Button>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer sx={{ width: drawerWidth, flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' } }} variant="permanent" anchor="left">
@@ -111,12 +135,22 @@ const Home = () => {
         </List>
         <Divider />  
         <List>
-          {['Profile', 'Setting'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <AccountBoxIcon /> : <SettingsIcon /> }</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
+          <ListItem key={'Profile'}>
+            <ListItemIcon>
+              { state?.image_url ? (
+                <Avatar src={state?.image_url} />
+              ) : (
+                <AccountBoxIcon />
+              )}
+            </ListItemIcon>
+            <ListItemText primary={'Profile'} onClick={() => showProfile()}/>
+          </ListItem>
+          <ListItem key={'Setting'}>
+            <ListItemIcon>
+              <SettingsIcon/>
+            </ListItemIcon>
+            <ListItemText primary={'Setting'} />
+          </ListItem>
         </List>
         { home &&
           <CastModel />

@@ -1,11 +1,16 @@
 import React from "react";
+import CustomTabs from "../components/CustomTabs";
 
 const News = ({isOpen}) => {
   return (
     <div>
       {isOpen &&
         <div>
-          <h1>News</h1>
+          <CustomTabs labels={['Podcast', 'Gadget']}>
+            <div>Podcast</div>
+            <div>Gadget</div>
+            <div>Programming</div>
+          </CustomTabs>
         </div>
       }
     </div>

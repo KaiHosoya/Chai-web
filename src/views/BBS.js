@@ -7,7 +7,6 @@ const BBS = ( {
   genre = '',
   goods = ''
 } ) => {
-  console.log('BBS', search)
   return (
     <div>
       {isOpen &&

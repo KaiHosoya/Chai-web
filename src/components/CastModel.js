@@ -46,8 +46,8 @@ const CastModel = () => {
   }
 
   return (
-    <div>
-      <Button variant="contained" onClick={openModel}>Cast</Button>
+    <div className="grid justify-items-center">
+      <Button variant="contained" onClick={openModel} >Cast</Button>
 
       {isModalOpen &&
         <div>
@@ -55,7 +55,7 @@ const CastModel = () => {
             <Box sx={style}>
               <TextField placeholder="What's on your mind?" onChange={(e) => {setComments(e.target.value)}} />
               <FormControl variant="standard">
-                <Select value={genre} lavel="Genre" onChange={changeGenre}>
+                <Select value={genre} lavel="Genre" onChange={changeGenre} sx={{ minWidth: 100 }}>
                   <MenuItem value=''>
                     <em>None</em>
                   </MenuItem>
@@ -63,7 +63,7 @@ const CastModel = () => {
                 </Select>
               </FormControl>
               <FormControl variant="standard">
-                <Select value={goods} lavel="Goods" onChange={changeGoods}>
+                <Select value={goods} lavel="Goods" onChange={changeGoods} sx={{ minWidth:100 }}>
                   <MenuItem value=''>
                     <em>None</em>
                   </MenuItem>
